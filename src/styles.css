@@ -1,0 +1,52 @@
+.dc-hello-bar {
+  /* Styling for hello bar ad area */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4em;
+  font-size: 18px;
+  color: #fff;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  background: #8fa55c; /*Same as emphasis button color on /bikes*/
+  z-index: 10000;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.dc-hello-bar__content {
+  max-width: 90vw;
+}
+
+.dc-hello-bar__close {
+  position: absolute;
+  right: 32px;
+  top: -16px;
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border: 3px solid #8fa55c;
+  transition: all .5s ease-in-out;
+  border-radius: 50%;
+}
+.dc-hello-bar__close:hover {
+  /* background: #8fa55c; */
+}
+.dc-hello-bar__close:before, .dc-hello-bar__close:after {
+  position: absolute;
+  left: 16px;
+  top: 3px;
+  content: ' ';
+  height: 28px;
+  width: 3px;
+  background-color: #8fa55c;
+}
+.dc-hello-bar__close:before {
+  transform: rotate(45deg);
+}
+.dc-hello-bar__close:after {
+  transform: rotate(-45deg);
+}
