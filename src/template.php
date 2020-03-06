@@ -29,3 +29,20 @@
   </div>
   <a class="dc-hello-bar__close"></a>
 </div>
+
+<script>
+  if (!sessionStorage.getItem('dcHelloBarClosed')) {
+    sessionStorage.setItem('dcHelloBarClosed', false);
+    document.querySelector('.dc-hello-bar__close').addEventListener('click', dcCloseHello);
+  }
+  else {
+    document.querySelector('.dc-hello-bar').remove();
+  }
+
+  function dcCloseHello() {
+    // Set session variable so that hello bar doesn't show on subsequent pages
+    sessionStorage.setItem('dcHelloBarClosed', true);
+    // Now hide the hello bar
+    document.querySelector('.dc-hello-bar').classList.add('dc-hello-bar--closed');
+  }
+</script>

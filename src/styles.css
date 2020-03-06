@@ -17,6 +17,9 @@
   justify-content: center;
   transition: all .5s ease-in-out;
 }
+.dc-hello-bar.dc-hello-bar--closed {
+  bottom: -50vh;
+}
 
 .dc-hello-bar__content {
   max-width: 90vw;
