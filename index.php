@@ -33,3 +33,17 @@ function dc_include_hello_bar() {
     include 'src/template.php';
   }
 }
+
+function dc_modify_session( WP_REST_Request $request ) {
+  // Handle requests to endpoint for changing hello_bar session variable
+  // Will always just hide hello bar for duration of the session
+  $_SESSION['hello_bar'] = False;
+  return $_SESSION;
+}
+// Register endpont for changing hello_bar session variable
+add_action( 'rest_api_init', function() {
+  register_rest_route( 'dc/v1', '/hello', array(
+    'methods' => 'GET',
+    'callback' => 'dc_modify_session'
+  ));
+});
