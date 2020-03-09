@@ -8,8 +8,13 @@
 * Author URI: https://ogdendavis.com/
 **/
 
+function dc_include_hello_bar() {
+  // Function used in footer template to add the hello bar
+  include_once 'src/template.php';
+}
 
 function dc_add_post_types() {
+  // Add custom post type for the ads
   register_post_type( 'dc_hello_ad',
     array(
       'labels' => array('name' => __('Hello Bar Ads'), 'singular_name' => __('Hello Bar Ad')),
@@ -19,15 +24,70 @@ function dc_add_post_types() {
 }
 add_action( 'init', 'dc_add_post_types' );
 
-function dc_include_hello_bar() {
-  // Function used in footer template to add the hello bar
-  include_once 'src/template.php';
-}
+function dc_get_hello_ads() {
+  // For use at endpoint for all hello ads
+  $raw = get_posts( array(
+    'numberposts' => -1,
+    'post_type' => 'dc_hello_ad',
+  ));
+  $relevant = [];
+  // Use raw info to get relevant data for display
+  foreach ($raw as $ad) {
+    $custom_all = get_post_custom($ad->ID);
+    $custom_filtered = array_filter($custom_all, function($key) {
+      return substr($key,0,3) === 'dc_';
+    }, ARRAY_FILTER_USE_KEY);
 
-// TRYING TO CREATE CUSTOM POST TYPES HERE, INSTEAD OF REYLING ON ACF PLUGIN
-// THIS IS BASED ON STEP 3 OF https://blog.teamtreehouse.com/create-your-first-wordpress-custom-post-type
+    $item = [
+      'ID' => $ad->ID,
+      'content' => $ad->post_content,
+      'custom' => $custom_filtered
+    ];
+    array_push($relevant, $item);
+  }
+  // Filter ads down to only those in valid range
+  $filtered = array_filter($relevant, 'dc_filter_hello_ads');
+  return $filtered;
+}
+function dc_filter_hello_ads($ad) {
+  // Get date in month and day of week, and format content from that!
+  date_default_timezone_set('America/New_York');
+
+  $is_date_valid = true;
+  if ( !empty( $ad['custom']['dc_start_date'][0] ) or !empty( $ad['custom']['dc_end_date'][0] ) ) {
+    // If start and end dates are set, deal with that first
+    $today_date = date('d');
+    // If no value given, set out of range to ensure it all goes
+    $start_date = empty( $ad['custom']['dc_start_date'][0] ) ? 0 : $ad['custom']['dc_start_date'][0];
+    $end_date = empty( $ad['custom']['dc_end_date'][0] ) ? 32 : $ad['custom']['dc_end_date'][0];
+
+    // Case for start date < end date (dates in same month)
+    if ($start_date < $end_date) {
+      $is_date_valid = $start_date <= $today_date and $end_date >= $today_date;
+    }
+    // Case for end date < start date (dates in different months)
+    elseif ($end_date < $start_date) {
+      $is_date_valid = $start_date <= $today_date or $end_date >= $today_date;
+    }
+
+    return false;
+  }
+
+  $is_day_valid = true;
+  // $dc_hello_day = strtolower(date('l'));
+
+  return $is_date_valid and $is_day_valid;
+}
+add_action( 'rest_api_init', function() {
+  register_rest_route( 'dc-hello/v1', '/ads', array(
+    'methods' => 'GET',
+    'callback' => 'dc_get_hello_ads',
+  ));
+});
+
 
 function dc_admin_init(){
+  // Add meta boxes to ad post edit
   add_meta_box("dc_ad_days", "Days to Display Ad", "dc_select_ad_days", "dc_hello_ad", "side", "default");
   add_meta_box("dc_ad_date_range", "Restrict Ad to Dates", "dc_select_ad_date_range", "dc_hello_ad", "side", "default");
 }
