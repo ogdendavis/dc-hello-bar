@@ -24,7 +24,7 @@ function dc_add_post_types() {
 }
 add_action( 'init', 'dc_add_post_types' );
 
-function dc_get_hello_ads() {
+function dc_get_hello_ad() {
   // For use at endpoint for all hello ads
   $raw = get_posts( array(
     'numberposts' => -1,
@@ -47,7 +47,10 @@ function dc_get_hello_ads() {
   }
   // Filter ads down to only those in valid range
   $filtered = array_filter($relevant, 'dc_filter_hello_ads');
-  return $filtered;
+
+  // Return the content of one of the random ads
+  $choice = array_rand( $filtered, 1 );
+  return $filtered[$choice]['content'];
 }
 function dc_filter_hello_ads($ad) {
   // Get date in month and day of week, and format content from that!
@@ -74,18 +77,16 @@ function dc_filter_hello_ads($ad) {
     $is_date_valid = true;
   }
 
-  // DO THIS FIRST:
-  // Program logic to filter ads by if they're valid on whatever day of the week today is
+  // Check if ad should be displayed today
+  $is_day_valid = $ad['custom']['dc_' . strtolower(date('l'))][0] == '1' ? true : false;
 
-  $is_day_valid = true;
-  // $dc_hello_day = strtolower(date('l'));
-
-  return $is_date_valid and $is_day_valid;
+  // Return if we're within valid date range for ad, and on a day of the week that's valid for it
+  return $is_date_valid && $is_day_valid;
 }
 add_action( 'rest_api_init', function() {
-  register_rest_route( 'dc-hello/v1', '/ads', array(
+  register_rest_route( 'dc-hello/v1', '/get-ad', array(
     'methods' => 'GET',
-    'callback' => 'dc_get_hello_ads',
+    'callback' => 'dc_get_hello_ad',
   ));
 });
 
