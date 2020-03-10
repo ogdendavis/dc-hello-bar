@@ -53,7 +53,6 @@ function dc_filter_hello_ads($ad) {
   // Get date in month and day of week, and format content from that!
   date_default_timezone_set('America/New_York');
 
-  $is_date_valid = true;
   if ( !empty( $ad['custom']['dc_start_date'][0] ) or !empty( $ad['custom']['dc_end_date'][0] ) ) {
     // If start and end dates are set, deal with that first
     $today_date = date('d');
@@ -63,15 +62,20 @@ function dc_filter_hello_ads($ad) {
 
     // Case for start date < end date (dates in same month)
     if ($start_date < $end_date) {
-      $is_date_valid = $start_date <= $today_date and $end_date >= $today_date;
+      $is_date_valid = ($start_date <= $today_date) && ($end_date >= $today_date);
+      //$is_date_valid = false;
     }
     // Case for end date < start date (dates in different months)
     elseif ($end_date < $start_date) {
-      $is_date_valid = $start_date <= $today_date or $end_date >= $today_date;
+      $is_date_valid = (($start_date >= $today_date) && ($end_date >= $today_date)) || (($start_date <= $today_date) && ($end_date <= $today_date));
     }
-
-    return false;
   }
+  else {
+    $is_date_valid = true;
+  }
+
+  // DO THIS FIRST:
+  // Program logic to filter ads by if they're valid on whatever day of the week today is
 
   $is_day_valid = true;
   // $dc_hello_day = strtolower(date('l'));
