@@ -19,18 +19,27 @@
 
 <script>
   /* Manage closing ad bar, and keeping it closed for session duration */
-  if (!sessionStorage.getItem('dcHelloBarClosed')) {
+  var dcStorageValue = sessionStorage.getItem('dcHelloBarClosed');
+  if (dcStorageValue === null) {
+    // If it doesn't exist, make the session storage value to control ad bar display
+    sessionStorage.setItem('dcHelloBarClosed', 'false');
+    dcStorageValue = 'false';
+  }
+
+  // Now that we know the storage value exists, perform appropriate actions
+  if (dcStorageValue === 'false') {
+    // If set to false, add content to the hello bar and move it into view
     dcHydrateHello(); // Adds content to hello bar from back end, and makes it visible
-    sessionStorage.setItem('dcHelloBarClosed', false);
     document.querySelector('.dc-hello-bar__close').addEventListener('click', dcCloseHello);
   }
   else {
+    // If set to true, get rid of it!
     document.querySelector('.dc-hello-bar').remove();
   }
 
   function dcCloseHello() {
     // Set session variable so that hello bar doesn't show on subsequent pages
-    sessionStorage.setItem('dcHelloBarClosed', true);
+    sessionStorage.setItem('dcHelloBarClosed', 'true');
     // Now hide the hello bar
     document.querySelector('.dc-hello-bar').classList.add('dc-hello-bar--closed');
   }
