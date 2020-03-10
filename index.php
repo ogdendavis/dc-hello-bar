@@ -8,11 +8,12 @@
 * Author URI: https://ogdendavis.com/
 **/
 
+/* Use in theme templates to add hello bar to any page on which the template is used. */
 function dc_include_hello_bar() {
-  // Function used in footer template to add the hello bar
   include_once 'src/template.php';
 }
 
+/* Add custom post type for hello bar ads */
 function dc_add_post_types() {
   // Add custom post type for the ads
   register_post_type( 'dc_hello_ad',
@@ -24,6 +25,7 @@ function dc_add_post_types() {
 }
 add_action( 'init', 'dc_add_post_types' );
 
+/* Add endpoint to get content of exactly one ad that's valid for display */
 function dc_get_hello_ad() {
   // For use at endpoint for all hello ads
   $raw = get_posts( array(
@@ -90,7 +92,7 @@ add_action( 'rest_api_init', function() {
   ));
 });
 
-
+/* Add custom meta boxes to dc_hello_ad post type. These control when ads display */
 function dc_admin_init(){
   // Add meta boxes to ad post edit
   add_meta_box("dc_ad_days", "Days to Display Ad", "dc_select_ad_days", "dc_hello_ad", "side", "default");
@@ -99,6 +101,7 @@ function dc_admin_init(){
 add_action( 'admin_init', 'dc_admin_init' );
 
 function dc_select_ad_days() {
+  // Function to display meta box to select days of week for the ad
   global $post;
   $custom = get_post_custom($post->ID);
   ?>
@@ -117,6 +120,7 @@ function dc_select_ad_days() {
 }
 
 function dc_select_ad_date_range() {
+  // Function to display meta box to select date ranges to restrict ad publication within
   global $post;
   $custom = get_post_custom($post->ID);
   $start = isset($custom['dc_start_date'][0]) ? $custom['dc_start_date'][0] : '';
@@ -131,6 +135,7 @@ function dc_select_ad_date_range() {
 }
 
 function dc_save_ad_info($post_id) {
+  // Function to save custom meta when post is saved
   // loop to save daily info
   $days = ['dc_monday', 'dc_tuesday', 'dc_wednesday', 'dc_thursday', 'dc_friday', 'dc_saturday', 'dc_sunday'];
   foreach ($days as $day) {
