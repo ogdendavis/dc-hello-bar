@@ -12,26 +12,15 @@
   <?php include 'styles.css'; ?>
 </style>
 
-<?php
-  // Get date in month and day of week, and format content from that!
-  date_default_timezone_set('America/New_York');
-  $dc_hello_date = date('d');
-  $dc_hello_day = date('D');
-
-  // Get ad choices
-
-  $dc_hello_content = 'It is ' . $dc_hello_day . ' the ' . $dc_hello_date . 'th.';
-?>
-
-<div class="dc-hello-bar">
-  <div class="dc-hello-bar__content">
-    <?php echo esc_html($dc_hello_content) ?>
-  </div>
+<div class="dc-hello-bar dc-hello-bar--closed">
+  <div class="dc-hello-bar__content"></div>
   <a class="dc-hello-bar__close"></a>
 </div>
 
 <script>
+  /* Manage closing ad bar, and keeping it closed for session duration */
   if (!sessionStorage.getItem('dcHelloBarClosed')) {
+    dcHydrateHello(); // Adds content to hello bar from back end, and makes it visible
     sessionStorage.setItem('dcHelloBarClosed', false);
     document.querySelector('.dc-hello-bar__close').addEventListener('click', dcCloseHello);
   }
@@ -44,5 +33,20 @@
     sessionStorage.setItem('dcHelloBarClosed', true);
     // Now hide the hello bar
     document.querySelector('.dc-hello-bar').classList.add('dc-hello-bar--closed');
+  }
+
+  /* Add ad content to dc-hello-bar__content. Ad filtering & selection is handled on back end */
+  function dcHydrateHello() {
+    // XMLHttpRequest because IE is still a thing
+    var dcXML = new XMLHttpRequest();
+    dcXML.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        // slice response text because it includes protected quotes
+        document.querySelector('.dc-hello-bar__content').innerHTML = JSON.parse(dcXML.responseText);
+        document.querySelector('.dc-hello-bar').classList.remove('dc-hello-bar--closed');
+      }
+    }
+    dcXML.open('GET', '<?php echo get_home_url(); ?>/wp-json/dc-hello/v1/get-ad');
+    dcXML.send();
   }
 </script>

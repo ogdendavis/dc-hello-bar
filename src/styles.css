@@ -61,3 +61,12 @@
 .dc-hello-bar__close:hover:before, .dc-hello-bar__close:hover:after {
   background-color: #fff;
 }
+.dc-hello-bar a {
+  color: #ab3f1b;
+}
+.dc-hello-bar a:visited {
+  color: purple;
+}
+.dc-hello-bar a:hover {
+  text-decoration: underline;
+}
