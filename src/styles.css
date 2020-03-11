@@ -17,6 +17,12 @@
   justify-content: center;
   transition: all .5s ease-in-out;
 }
+@media only screen and (max-width: 480px) {
+  .dc-hello-bar {
+    font-size: 14px;
+    padding-left: 56px;
+  }
+}
 .dc-hello-bar.dc-hello-bar--closed {
   bottom: -50vh;
 }
@@ -35,6 +41,11 @@
   border: 3px solid #8fa55c;
   transition: all .25s ease-in-out;
   border-radius: 50%;
+}
+@media only screen and (max-width: 480px) {
+  .dc-hello-bar__close {
+    right: 8px;
+  }
 }
 .dc-hello-bar__close:hover {
   /* background: #8fa55c; */
