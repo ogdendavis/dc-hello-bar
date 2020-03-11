@@ -108,14 +108,23 @@ function dc_select_ad_days() {
   <style>
     <?php include 'src/admin-styles.css'; ?>
   </style>
-  <div class="dc-ad-admin-subtitle">Check all that apply</div>
-  <input type="checkbox" id="dc_monday" name="dc_monday" value="true"<?php echo $custom['dc_monday'][0] == '1' ? 'checked' : ''; ?>>Monday</input><br />
-  <input type="checkbox" id="dc_tuesday" name="dc_tuesday" value="true"<?php echo $custom['dc_tuesday'][0] == '1' ? 'checked' : ''; ?>>Tuesday</input><br />
-  <input type="checkbox" id="dc_wednesday" name="dc_wednesday" value="true"<?php echo $custom['dc_wednesday'][0] == '1' ? 'checked' : ''; ?>>Wednesday</input><br />
-  <input type="checkbox" id="dc_thursday" name="dc_thursday" value="true"<?php echo $custom['dc_thursday'][0] == '1' ? 'checked' : ''; ?>>Thursday</input><br />
-  <input type="checkbox" id="dc_friday" name="dc_friday" value="true"<?php echo $custom['dc_friday'][0] == '1' ? 'checked' : ''; ?>>Friday</input><br />
-  <input type="checkbox" id="dc_saturday" name="dc_saturday" value="true"<?php echo $custom['dc_saturday'][0] == '1' ? 'checked' : ''; ?>>Saturday</input><br />
-  <input type="checkbox" id="dc_sunday" name="dc_sunday" value="true"<?php echo $custom['dc_sunday'][0] == '1' ? 'checked' : ''; ?>>Sunday</input><br />
+  <input type="checkbox" id="dc_select_all_days"><b>Select All</b></input><br />
+  <input type="checkbox" class="dc_day_checkbox" id="dc_sunday" name="dc_sunday" value="true"<?php echo $custom['dc_sunday'][0] == '1' ? 'checked' : ''; ?>>Sunday</input><br />
+  <input type="checkbox" class="dc_day_checkbox" id="dc_monday" name="dc_monday" value="true"<?php echo $custom['dc_monday'][0] == '1' ? 'checked' : ''; ?>>Monday</input><br />
+  <input type="checkbox" class="dc_day_checkbox" id="dc_tuesday" name="dc_tuesday" value="true"<?php echo $custom['dc_tuesday'][0] == '1' ? 'checked' : ''; ?>>Tuesday</input><br />
+  <input type="checkbox" class="dc_day_checkbox" id="dc_wednesday" name="dc_wednesday" value="true"<?php echo $custom['dc_wednesday'][0] == '1' ? 'checked' : ''; ?>>Wednesday</input><br />
+  <input type="checkbox" class="dc_day_checkbox" id="dc_thursday" name="dc_thursday" value="true"<?php echo $custom['dc_thursday'][0] == '1' ? 'checked' : ''; ?>>Thursday</input><br />
+  <input type="checkbox" class="dc_day_checkbox" id="dc_friday" name="dc_friday" value="true"<?php echo $custom['dc_friday'][0] == '1' ? 'checked' : ''; ?>>Friday</input><br />
+  <input type="checkbox" class="dc_day_checkbox" id="dc_saturday" name="dc_saturday" value="true"<?php echo $custom['dc_saturday'][0] == '1' ? 'checked' : ''; ?>>Saturday</input><br />
+  <script>
+    <?php // Use Select All to select all days! ?>
+    function dcSelectAllDays(e) {
+      document.querySelectorAll('.dc_day_checkbox').forEach(function(box) {
+        box.checked = e.target.checked;
+      });
+    }
+    document.querySelector('#dc_select_all_days').addEventListener('click',dcSelectAllDays);
+  </script>
   <?php
 }
 
