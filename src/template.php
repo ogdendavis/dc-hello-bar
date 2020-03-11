@@ -50,8 +50,7 @@
     var dcXML = new XMLHttpRequest();
     dcXML.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        // slice response text because it includes protected quotes
-        console.log(dcXML.responseText);
+        // Parse response if valid, otherwise substitute default text
         var dcResponse = dcTestResponse(dcXML.responseText) || 'Come see us at 227 West Jackson St in downtown Thomasville!';
         document.querySelector('.dc-hello-bar__content').innerHTML = dcResponse;
         document.querySelector('.dc-hello-bar').classList.remove('dc-hello-bar--closed');
