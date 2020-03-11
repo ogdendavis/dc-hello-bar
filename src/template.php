@@ -51,19 +51,10 @@
     dcXML.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         // Parse response if valid, otherwise substitute default text
-        var dcResponse = dcTestResponse(dcXML.responseText) || 'Come see us at 227 West Jackson St in downtown Thomasville!';
+        var dcResponse = dcXML.responseText == '' ? 'Come see us at 227 West Jackson St in downtown Thomasville!' : JSON.parse(dcXML.responseText);
         document.querySelector('.dc-hello-bar__content').innerHTML = dcResponse;
         document.querySelector('.dc-hello-bar').classList.remove('dc-hello-bar--closed');
       }
-    }
-    function dcTestResponse(r) {
-      try {
-        var dcResponseParsed = JSON.parse(str);
-      }
-      catch (e) {
-        return false;
-      }
-      return dcResponseParsed;
     }
     dcXML.open('GET', '<?php echo get_home_url(); ?>/wp-json/dc-hello/v1/get-ad');
     dcXML.send();
