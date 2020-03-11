@@ -51,9 +51,20 @@
     dcXML.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         // slice response text because it includes protected quotes
-        document.querySelector('.dc-hello-bar__content').innerHTML = JSON.parse(dcXML.responseText);
+        console.log(dcXML.responseText);
+        var dcResponse = dcTestResponse(dcXML.responseText) || 'Come see us at 227 West Jackson St in downtown Thomasville!';
+        document.querySelector('.dc-hello-bar__content').innerHTML = dcResponse;
         document.querySelector('.dc-hello-bar').classList.remove('dc-hello-bar--closed');
       }
+    }
+    function dcTestResponse(r) {
+      try {
+        var dcResponseParsed = JSON.parse(str);
+      }
+      catch (e) {
+        return false;
+      }
+      return dcResponseParsed;
     }
     dcXML.open('GET', '<?php echo get_home_url(); ?>/wp-json/dc-hello/v1/get-ad');
     dcXML.send();
