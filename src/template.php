@@ -51,7 +51,7 @@
     dcXML.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         // Parse response if valid, otherwise substitute default text
-        var dcResponse = dcXML.responseText == '' ? 'Come see us at 227 West Jackson St in downtown Thomasville!' : JSON.parse(dcXML.responseText);
+        var dcResponse = dcXML.responseText == '' ? 'Come see us at 209 West Remington St in downtown Thomasville!' : JSON.parse(dcXML.responseText);
         document.querySelector('.dc-hello-bar__content').innerHTML = dcResponse;
         document.querySelector('.dc-hello-bar').classList.remove('dc-hello-bar--closed');
       }
